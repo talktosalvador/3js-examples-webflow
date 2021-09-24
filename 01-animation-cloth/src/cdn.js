@@ -551,8 +551,8 @@ function init() {
 
     // performance monitor
 
-    // stats = new Stats();
-    // container.appendChild( stats.dom );
+    stats = new Stats();
+    container.appendChild( stats.dom );
 
     //
 
@@ -585,7 +585,7 @@ function animate( now ) {
     requestAnimationFrame( animate );
     simulate( now );
     render();
-    // stats.update();
+    stats.update();
 
 }
 
