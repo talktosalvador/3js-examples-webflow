@@ -513,11 +513,8 @@ function init() {
     renderer.shadowMap.enabled = true;
 
     // controls
-    const controls = new THREE.OrbitControls( camera, renderer.domElement );
-    // controls.maxPolarAngle = Math.PI * 0.5;
-    // controls.minDistance = 100;
-    // controls.maxDistance = 5000;
 
+    const controls = new THREE.OrbitControls( camera, renderer.domElement );
     // controls.autoRotate = true
     // controls.autoRotateSpeed = 10
     controls.enableDamping = true
@@ -546,8 +543,6 @@ function init() {
     controls.maxPolarAngle = Math.PI * 0.5;
     controls.maxDistance = 1500
     controls.minDistance = 500;
-
-
 
     // performance monitor
 
