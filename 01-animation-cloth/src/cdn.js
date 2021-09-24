@@ -560,10 +560,10 @@ function init() {
 
     //
 
-    const gui = new GUI();
-    gui.add( params, 'enableWind' ).name( 'Enable wind' );
-    gui.add( params, 'showBall' ).name( 'Show ball' );
-    gui.add( params, 'togglePins' ).name( 'Toggle pins' );
+    // const gui = new GUI();
+    // gui.add( params, 'enableWind' ).name( 'Enable wind' );
+    // gui.add( params, 'showBall' ).name( 'Show ball' );
+    // gui.add( params, 'togglePins' ).name( 'Toggle pins' );
 
 }
 
