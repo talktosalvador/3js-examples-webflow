@@ -412,7 +412,7 @@ function init() {
     // cloth material
 
     const loader = new THREE.TextureLoader();
-    const clothTexture = loader.load( 'textures/patterns/circuit_pattern1.png' );
+    const clothTexture = loader.load( 'https://uploads-ssl.webflow.com/609454a1ac87494548820b17/614d172ca5423368fa3d9abb_circuit_pattern1.png' );
     clothTexture.anisotropy = 16;
 
     const clothMaterial = new THREE.MeshLambertMaterial( {
@@ -445,7 +445,7 @@ function init() {
 
     // ground
 
-    const groundTexture = loader.load( 'textures/terrain/grasslight-big.jpg' );
+    const groundTexture = loader.load( 'https://uploads-ssl.webflow.com/609454a1ac87494548820b17/614d17348b8c92204d3067a8_grasslight-big.jpg' );
     groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
     groundTexture.repeat.set( 25, 25 );
     groundTexture.anisotropy = 16;
