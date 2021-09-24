@@ -1,21 +1,7 @@
-import './style.css'
-import * as THREE from 'three'
+import * as THREE from "three";
+import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import Stats from "three/examples/jsm/libs/stats.module";
 import {GUI} from "dat.gui";
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-
-
-/*
- * Cloth Simulation using a relaxed constraints solver
- */
-
-// Suggested Readings
-
-// Advanced Character Physics by Thomas Jakobsen Character
-// http://freespace.virgin.net/hugo.elias/models/m_cloth.htm
-// http://en.wikipedia.org/wiki/Cloth_modeling
-// http://cg.alexandra.dk/tag/spring-mass-system/
-// Real-time Cloth Animation http://www.darwin3d.com/gamedev/articles/col0599.pdf
 
 const params = {
     enableWind: true,
