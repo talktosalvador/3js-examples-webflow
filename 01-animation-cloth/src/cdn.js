@@ -552,7 +552,7 @@ function init() {
     // performance monitor
 
     stats = new Stats();
-    container.appendChild( stats.dom );
+    container.appendChild( stats.domElement);
 
     //
 
