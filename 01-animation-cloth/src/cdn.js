@@ -537,8 +537,8 @@ function init() {
     //     TWO: THREE.TOUCH.DOLLY_PAN
     // }
     // controls.screenSpacePanning = true
-    controls.minAzimuthAngle = 0 - 1.5
-    controls.maxAzimuthAngle = Math.PI / 2
+    // controls.minAzimuthAngle = 0 - 1.5
+    // controls.maxAzimuthAngle = Math.PI / 2
     controls.minPolarAngle = 0
     controls.maxPolarAngle = Math.PI * 0.5;
     controls.maxDistance = 1500
