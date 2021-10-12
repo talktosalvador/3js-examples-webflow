@@ -517,7 +517,7 @@ function init() {
     const controls = new THREE.OrbitControls( camera, renderer.domElement );
     // controls.autoRotate = true
     // controls.autoRotateSpeed = 10
-    controls.enableDamping = true
+    // controls.enableDamping = true
     // controls.dampingFactor = .01
     // controls.enableKeys = true //older versions
     // controls.listenToKeyEvents(document.body)
@@ -555,7 +555,7 @@ function init() {
 
     //
 
-    const gui = new GUI();
+    const gui = new dat.GUI();
     gui.add( params, 'enableWind' ).name( 'Enable wind' );
     gui.add( params, 'showBall' ).name( 'Show ball' );
     gui.add( params, 'togglePins' ).name( 'Toggle pins' );

@@ -23,6 +23,7 @@ TO EMBED
 		gl_PointSize *= (1.0 / - viewPosition.z);
 	}
 </script>
+
 <script id="firefliesFragmentShader" type="x-shader/x-fragment">
 	void main() {
 		float distanceToCenter = distance(gl_PointCoord, vec2(0.5));
@@ -187,12 +188,10 @@ TO BODY
     // Scene
     const scene = new THREE.Scene();
 
-    // const axesHelper = new THREE.AxesHelper( 5 );
-    // scene.add( axesHelper );
     /**
      * Loaders
      */
-        // Texture loader
+// Texture loader
     const textureLoader = new THREE.TextureLoader();
 
     // GLTF loader
@@ -232,27 +231,22 @@ TO BODY
     /**
      * Model
      */
-    gltfLoader.load(
-        "https://uploads-ssl.webflow.com/60f794e0c544906e43f4937e/60f7a954bb769a5c89bfa6bd_portal-2.txt",
-        (gltf) => {
-            model = gltf.scene
-            scene.add(model)
-            model.rotation.y = Math.PI
+    gltfLoader.load("https://uploads-ssl.webflow.com/60f794e0c544906e43f4937e/60f7a954bb769a5c89bfa6bd_portal-2.txt", (gltf) => {
+        const bakedMesh = gltf.scene.children.find((child) => child.name === "baked");
+        bakedMesh.material = bakedMaterial;
 
-            const bakedMesh = gltf.scene.children.find((child) => child.name === "baked");
-            bakedMesh.material = bakedMaterial;
+        const portalLight = gltf.scene.children.find(
+            (child) => child.name === "portalCircle"
+        );
+        portalLight.material = portalLightMaterial;
+        gltf.scene.children
+            .filter((child) => child.name.includes("lampLight"))
+            .forEach((light) => {
+                light.material = poleLightMaterial;
+            });
 
-            const portalLight = gltf.scene.children.find(
-                (child) => child.name === "portalCircle"
-            );
-            portalLight.material = portalLightMaterial;
-            gltf.scene.children
-                .filter((child) => child.name.includes("lampLight"))
-                .forEach((light) => {
-                    light.material = poleLightMaterial;
-                });
-
-        });
+        scene.add(gltf.scene);
+    });
 
     /**
      * Fireflies
@@ -332,43 +326,19 @@ TO BODY
         45,
         sizes.width / sizes.height,
         0.1,
-        100)
-    camera.position.x = 0
-    camera.position.y = 2
-    camera.position.z = 4
-    scene.add(camera)
+        100
+    );
+    camera.position.x = -4;
+    camera.position.y = 2;
+    camera.position.z = -4;
+    scene.add(camera);
 
     // Controls
     const controls = new THREE.OrbitControls(camera, canvas);
+    controls.enableDamping = true;
 
-    // controls.autoRotate = true
-    // controls.autoRotateSpeed = 10
-    controls.enableDamping = true
-    // controls.dampingFactor = .01
-    // controls.enableKeys = true //older versions
-    // controls.listenToKeyEvents(document.body)
-    // controls.keys = {
-    //     LEFT: "ArrowLeft", //left arrow
-    //     UP: "ArrowUp", // up arrow
-    //     RIGHT: "ArrowRight", // right arrow
-    //     BOTTOM: "ArrowDown" // down arrow
-    // }
-    // controls.mouseButtons = {
-    //     LEFT: THREE.MOUSE.ROTATE,
-    //     MIDDLE: THREE.MOUSE.DOLLY,
-    //     RIGHT: THREE.MOUSE.PAN
-    // }
-    // controls.touches = {
-    //     ONE: THREE.TOUCH.ROTATE,
-    //     TWO: THREE.TOUCH.DOLLY_PAN
-    // }
-    // controls.screenSpacePanning = true
-    controls.minAzimuthAngle = 0 - 1.5
-    controls.maxAzimuthAngle = Math.PI / 2
-    controls.minPolarAngle = 0
-    controls.maxPolarAngle = Math.PI - 1.6
-    controls.maxDistance = 8
-    controls.minDistance = 2
+    // Don't go below the ground
+    controls.maxPolarAngle = Math.PI / 2 - 0.1;
 
     // Clamp panning
     const minPan = new THREE.Vector3(-0.2, -0.2, -0.2);
