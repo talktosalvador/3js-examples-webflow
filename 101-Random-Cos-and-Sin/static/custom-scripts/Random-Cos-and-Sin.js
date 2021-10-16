@@ -2,7 +2,7 @@ function App() {
     const conf = {
         nx: 40,
         ny: 100,
-        cscale: chroma.scale(['#2175D8', '#DC5DCE', '#CC223D', '#F07414', '#FDEE61', '#74C425']).mode('lch'),
+        cscale: chroma.scale(['#e0bc09', '#73d821', '#debb0c', '#f01447', '#FDEE61', '#74C425']).mode('lch'),
         darken: -1,
         angle: Math.PI / 3,
         timeCoef: 0.1
@@ -10,15 +10,15 @@ function App() {
 
     let renderer, scene, camera;
     let width, height;
-    const { randFloat: rnd } = THREE.Math;
+    const {randFloat: rnd} = THREE.Math;
 
-    const uTime = { value: 0 }, uTimeCoef = { value: conf.timeCoef };
+    const uTime = {value: 0}, uTimeCoef = {value: conf.timeCoef};
     const polylines = [];
 
     init();
 
     function init() {
-        renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: true });
+        renderer = new THREE.WebGLRenderer({canvas: document.getElementById('canvas'), antialias: true});
         camera = new THREE.PerspectiveCamera();
 
         updateSize();
@@ -96,22 +96,22 @@ function App() {
                 const x = ox + i * dx, y = oy + j * dy;
                 points.push(new THREE.Vector3(x, y, 0));
             }
-            const polyline = new Polyline({ points });
+            const polyline = new Polyline({points});
             polylines.push(polyline);
 
             const material = new THREE.ShaderMaterial({
                 uniforms: {
                     uTime,
                     uTimeCoef,
-                    uMat2: { value: mat2 },
-                    uSize: { value: 1.5 / conf.nx },
-                    uRnd1: { value: new THREE.Vector3(rnd(-1, 1), rnd(-1, 1), rnd(-1, 1)) },
-                    uRnd2: { value: new THREE.Vector3(rnd(-1, 1), rnd(-1, 1), rnd(-1, 1)) },
-                    uRnd3: { value: new THREE.Vector3(rnd(-1, 1), rnd(-1, 1), rnd(-1, 1)) },
-                    uRnd4: { value: new THREE.Vector3(rnd(-1, 1), rnd(-1, 1), rnd(-1, 1)) },
-                    uRnd5: { value: new THREE.Vector3(rnd(0.2, 0.5), rnd(0.3, 0.6), rnd(0.4, 0.7)) },
-                    uColor1: { value: new THREE.Color(conf.cscale(i / conf.nx).hex()) },
-                    uColor2: { value: new THREE.Color(conf.cscale(i / conf.nx).darken(conf.darken).hex()) }
+                    uMat2: {value: mat2},
+                    uSize: {value: 1.5 / conf.nx},
+                    uRnd1: {value: new THREE.Vector3(rnd(-1, 1), rnd(-1, 1), rnd(-1, 1))},
+                    uRnd2: {value: new THREE.Vector3(rnd(-1, 1), rnd(-1, 1), rnd(-1, 1))},
+                    uRnd3: {value: new THREE.Vector3(rnd(-1, 1), rnd(-1, 1), rnd(-1, 1))},
+                    uRnd4: {value: new THREE.Vector3(rnd(-1, 1), rnd(-1, 1), rnd(-1, 1))},
+                    uRnd5: {value: new THREE.Vector3(rnd(0.2, 0.5), rnd(0.3, 0.6), rnd(0.4, 0.7))},
+                    uColor1: {value: new THREE.Color(conf.cscale(i / conf.nx).hex())},
+                    uColor2: {value: new THREE.Color(conf.cscale(i / conf.nx).darken(conf.darken).hex())}
                 },
                 vertexShader,
                 fragmentShader
@@ -132,7 +132,7 @@ function App() {
     }
 
     function disposeScene() {
-        for (let i=0; i<scene.children.length; i++) {
+        for (let i = 0; i < scene.children.length; i++) {
             const mesh = scene.children[i];
             scene.remove(mesh);
             mesh.geometry.dispose();
@@ -168,7 +168,7 @@ const Polyline = (function () {
 
     class Polyline {
         constructor(params) {
-            const { points } = params;
+            const {points} = params;
             this.points = points;
             this.count = points.length;
             this.init();
