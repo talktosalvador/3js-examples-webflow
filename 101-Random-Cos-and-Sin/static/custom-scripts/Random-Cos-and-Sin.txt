@@ -96,7 +96,7 @@ function App() {
                 const x = ox + i * dx, y = oy + j * dy;
                 points.push(new THREE.Vector3(x, y, 0));
             }
-            const polyline = new Polyline({ points });
+            const polyline = new Polylines({ points });
             polylines.push(polyline);
 
             const material = new THREE.ShaderMaterial({
@@ -162,11 +162,11 @@ function App() {
     }
 }
 
-// adapted from https://github.com/oframe/ogl/blob/master/src/extras/Polyline.js
-const Polyline = (function () {
+// adapted from https://github.com/oframe/ogl/blob/master/src/extras/Polylines.js
+const Polylines = (function () {
     const tmp = new THREE.Vector3();
 
-    class Polyline {
+    class Polylines {
         constructor(params) {
             const { points } = params;
             this.points = points;
@@ -233,7 +233,7 @@ const Polyline = (function () {
         }
     }
 
-    return Polyline;
+    return Polylines;
 })();
 
 App();
