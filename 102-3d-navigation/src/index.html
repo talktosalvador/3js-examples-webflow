@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>00 - Base code</title>
+
+	<!--	INSIDE <HEAD> TAG   -->
+	<style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .webgl {
+            /*z-index: -5;*/
+            display: block;
+        }
+
+        form {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+        }
+
+	</style>
+</head>
+
+<body>
+
+<form>
+<input type="button"
+       onclick="moverCamaraArriba()"
+       value="Arriba">
+<input type="button"
+       onclick="moverCamaraDerecha()"
+       value="Derecha">
+<input type="button"
+       onclick="moverCamaraAbajo()"
+       value="Abajo">
+<input type="button"
+       onclick="moverCamaraIzquierda()"
+       value="Izquierda">
+</form>
+
+<canvas id="canvas" class="webgl"></canvas>
+
+<script>
+    function moverCamaraArriba() {
+        gsap.to( camera.position, {
+            duration: 1,
+            x: 0,
+            y: 1,
+            z: 1,
+
+            onUpdate: function() {
+                camera.lookAt( center );
+            }
+        } );
+    }
+    function moverCamaraDerecha() {
+        gsap.to( camera.position, {
+            duration: 1,
+            x: 1,
+            y: 0,
+            z: 1,
+
+            onUpdate: function() {
+                camera.lookAt( center );
+            }
+        } );
+    }
+    function moverCamaraIzquierda() {
+        gsap.to( camera.position, {
+            duration: 1,
+            x: -1,
+            y: 0,
+            z: 1,
+
+            onUpdate: function() {
+                camera.lookAt( center );
+            }
+        } );
+    }
+    function moverCamaraAbajo() {
+        gsap.to( camera.position, {
+            duration: 1,
+            x: 0,
+            y: -1,
+            z: 1,
+
+            onUpdate: function() {
+                camera.lookAt( center );
+            }
+        } );
+    }
+</script>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r125/three.min.js'></script>
+<script src='https://unpkg.com/three@0.125.2/examples/js/controls/OrbitControls.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.4.0/gsap.min.js"></script>
+
+<!--	<script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.7/dat.gui.min.js'></script>-->
+<!--	<script type="text/javascript" src='https://unpkg.com/three@0.125.2/examples/js/loaders/GLTFLoader.js'></script>-->
+
+<script id="vertex" type="x-shader/x-vertex">
+	//uniform mat4 projectionMatrix;
+	//uniform mat4 viewMatrix;
+	//uniform mat4 modelMatrix;
+	uniform vec2 uFrequency;
+	uniform float uTime;
+
+	//attribute vec3 position;
+	attribute float aRandom;
+	//attribute vec2 uv;
+
+	varying float vRandom;
+	varying vec2 vUv;
+	varying float vElevation;
+
+	void main()
+	{
+		vec4 modelPosition = modelMatrix * vec4(position, 1.0);
+//		    modelPosition.z += sin(modelPosition.x * uFrequency.x - uTime) * 0.1;
+//		    modelPosition.z += sin(modelPosition.y * uFrequency.y - uTime) * 0.05;
+//		    modelPosition.z += aRandom * 0.04;
+
+		float elevation = sin(modelPosition.x * uFrequency.x - uTime) * 0.02;
+		elevation += sin(modelPosition.y * uFrequency.y - uTime) * 0.02;
+		modelPosition.z += elevation;
+
+		vec4 viewPosition = viewMatrix * modelPosition;
+		vec4 projectedPosition = projectionMatrix * viewPosition;
+		gl_Position = projectedPosition;
+		vRandom = aRandom;
+		vUv = uv;
+		vElevation = elevation;
+
+	}
+</script>
+<script id="fragment" type="x-shader/x-fragment">
+	//precision mediump float;
+
+	uniform vec3 uColor;
+	uniform sampler2D uTexture;
+
+	varying float vRandom;
+	varying vec2 vUv;
+	varying float vElevation;
+
+	void main()
+	{
+		vec4 textureColor = texture2D(uTexture, vUv);
+		textureColor.rgb *= vElevation * 2.0 + 0.5;
+		gl_FragColor = textureColor;
+
+//		    gl_FragColor = vec4(uColor, 0.8);
+	}
+</script>
+<script>
+    // import './style.css'
+    // import * as THREE from 'three'
+    // import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
+    // import * as dat from 'dat.gui'
+    // import testVertexShader from '../shaders/test/vertex.glsl'
+    // import testFragmentShader from '../shaders/test/fragment.glsl'
+    let vertex = document.getElementById("vertex").textContent;
+    let fragment = document.getElementById("fragment").textContent;
+
+    /**
+     * Base
+     */
+// Debug
+// const gui = new dat.GUI()
+
+// Canvas
+    const canvas = document.querySelector('canvas.webgl')
+
+    // Scene
+    const scene = new THREE.Scene()
+
+    /**
+     * Textures
+     */
+    const textureLoader = new THREE.TextureLoader()
+    // const flagTexture = textureLoader.load('/textures/flag-french.jpg')
+    // const flagTexture = textureLoader.load('/textures/1.jpg')
+    // const flagTexture = textureLoader.load('../static/textures/flag-french.jpg')
+    const flagTexture = textureLoader.load('../static/textures/flag-nazi.jpg')
+
+    /**
+     * Test mesh
+     */
+// Geometry
+    const geometry = new THREE.PlaneBufferGeometry(2, 1, 64, 64)
+    // const geometry = new THREE.BoxBufferGeometry(1,1,1)
+    // const geometry = new THREE.TorusGeometry(1,0.5,16,12)
+
+    // Customize
+    const count = geometry.attributes.position.count
+    const randoms = new Float32Array(count)
+    for (let i = 0; i < count; i++) {
+        randoms[i] = Math.random()
+        // randoms[i] = Math.sin(i) / 2 + 0.5
+    }
+    geometry.setAttribute('aRandom', new THREE.BufferAttribute(randoms, 1))
+
+    // Material
+    // const material = new THREE.RawShaderMaterial({
+    const material = new THREE.ShaderMaterial({
+        // vertexShader: testVertexShader,
+        vertexShader: vertex,
+        // fragmentShader: testFragmentShader,
+        fragmentShader: fragment,
+        // wireframe: true,
+        // transparent: true,
+        uniforms: {
+            uFrequency: {value: new THREE.Vector2(10, 15)},
+            uTime: {value: 0},
+            uColor: {value: new THREE.Color('orange')},
+            uTexture: {value: flagTexture},
+        },
+    })
+    // gui.add(material.uniforms.uFrequency.value, 'x').min(50).max(100).step(1.0).name('frequencyX')
+    // gui.add(material.uniforms.uFrequency.value, 'y').min(50).max(100).step(1.0).name('frequencyY')
+
+    // Mesh
+    const mesh = new THREE.Mesh(geometry, material)
+    // mesh.scale.y = 2 / 3
+    scene.add(mesh)
+
+    /**
+     * Sizes
+     */
+    const sizes = {
+        width: window.innerWidth,
+        height: window.innerHeight,
+    }
+
+    window.addEventListener('resize', () => {
+        // Update sizes
+        sizes.width = window.innerWidth
+        sizes.height = window.innerHeight
+
+        // Update camera
+        camera.aspect = sizes.width / sizes.height
+        camera.updateProjectionMatrix()
+
+        // Update renderer
+        renderer.setSize(sizes.width, sizes.height)
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    })
+
+    /**
+     * Camera
+     */
+// Base camera
+    const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
+    camera.position.set(0, 0, 1)
+    scene.add(camera)
+
+    // Controls
+    const controls = new THREE.OrbitControls(camera, canvas);
+    // const controls = new OrbitControls(camera, canvas)
+
+    controls.enableDamping = true
+
+    let aabb = new THREE.Box3().setFromObject( mesh );
+    let center = aabb.getCenter( new THREE.Vector3() );
+    let size = aabb.getSize( new THREE.Vector3() );
+
+
+
+    /**
+     * Renderer
+     */
+    const renderer = new THREE.WebGLRenderer({
+        canvas: canvas
+    })
+    renderer.setSize(sizes.width, sizes.height)
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+    /**
+     * Animate
+     */
+    const clock = new THREE.Clock()
+
+    const tick = () => {
+        const elapsedTime = clock.getElapsedTime()
+
+        // Update material
+        material.uniforms.uTime.value = elapsedTime
+
+        // Update controls
+        controls.update()
+
+        // Render
+        renderer.render(scene, camera)
+
+        // Call tick again on the next frame
+        window.requestAnimationFrame(tick)
+    }
+
+    tick()
+
+</script>
+
+</body>
+</html>
