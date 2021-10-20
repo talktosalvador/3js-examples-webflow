@@ -20,9 +20,7 @@
         form {
             position: absolute;
             bottom: 5%;
-            left: 45%;
-            display: grid;
-            grid-template-columns: auto auto auto;
+            left: 47%;
             background-color: rgba(131, 131, 131, 0.5);
             padding: 5px;
             border-radius: 25px;
@@ -47,7 +45,20 @@
         #buttonCenter {
             background-color: #32aad2;
             border-radius: 50%;
-	        /*width: 5px;*/
+        }
+
+        #buttonNextPage {
+            position: absolute;
+            right: 10%;
+            bottom: 10%;
+
+        }
+
+        a {
+            text-decoration: none;
+            font-family: "Monotype Corsiva";
+            font-size: 25px;
+            color: white;
         }
 
 	</style>
@@ -56,131 +67,28 @@
 <body>
 
 <form>
-	<div></div>
-
-	<div><a href="javascript:null">
-		<img id="buttonUp" src="../static/img/button-arrow-blue.png" width="25px" height="25px" alt=""
-		     onClick="moverCamaraArriba()"></a>
-	</div>
-
-	<div></div>
-
-	<div><a href="javascript:null">
-		<img id="buttonLeft" src="../static/img/button-arrow-blue.png" width="25px" height="25px" alt=""
-		     onClick="moverCamaraIzquierda()"></a>
-	</div>
-
-	<div><a href="javascript:null">
-		<img id="buttonCenter" src="../static/img/button-arrow-blue.png" width="25px" height="25px" alt=""
-		     onClick="moverCamaraCentro()"></a>
-	</div>
-
-	<div><a href="javascript:null">
-		<img id="buttonRight" src="../static/img/button-arrow-blue.png" width="25px" height="25px" alt=""
-		     onClick="moverCamaraDerecha()"></a>
-	</div>
-
-	<div></div>
-
-	<div><a href="javascript:null">
-		<img id="buttonDown" src="../static/img/button-arrow-blue.png" width="25px" height="25px" alt=""
-		     onClick="moverCamaraAbajo()"></a>
-	</div>
+	<a href="javascript:null" onclick="goToYtem()">Ytem</a>
+	<a href="javascript:null" onclick="goToMojix()">Mojix</a>
+	<a href="javascript:null" onclick="goToSenden()">Senden</a>
 </form>
+
+<div id="buttonNextPage">
+	<a href="navigation-with-arrows.html">Navigation with arrows</a>
+
+</div>
 
 <canvas id="canvas" class="webgl"></canvas>
 
-<script>
-    let center = [0, 0, 0]
-
-    function moverCamaraCentro() {
-        gsap.to(camera.position, {
-            duration: 1,
-            x: 0,
-            y: 0,
-            z: 1,
-            ease: "back.out(2.7)",
-
-            onUpdate: function () {
-                camera.lookAt(center);
-            }
-        });
-    }
-
-    function moverCamaraArriba() {
-        gsap.to(camera.position, {
-            duration: 1,
-            x: 0,
-            y: 1,
-            z: 1,
-            ease: "back.out(2.7)",
-
-            onUpdate: function () {
-                camera.lookAt(center);
-            }
-        });
-    }
-
-    function moverCamaraDerecha() {
-        gsap.to(camera.position, {
-            duration: 1,
-            x: 1,
-            y: 0,
-            z: 1,
-            ease: "back.out(2.7)",
-
-            onUpdate: function () {
-                camera.lookAt(center);
-            }
-        });
-    }
-
-    function moverCamaraIzquierda() {
-        gsap.to(camera.position, {
-            duration: 1,
-            x: -1,
-            y: 0,
-            z: 1,
-            ease: "back.out(2.7)",
-
-            onUpdate: function () {
-                camera.lookAt(center);
-            }
-        });
-    }
-
-    function moverCamaraAbajo() {
-        gsap.to(camera.position, {
-            duration: 1,
-            x: 0,
-            y: -1,
-            z: 1,
-            ease: "back.out(2.7)",
-
-            onUpdate: function () {
-                camera.lookAt(center);
-            }
-        });
-    }
-</script>
 
 <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r125/three.min.js'></script>
 <script src='https://unpkg.com/three@0.125.2/examples/js/controls/OrbitControls.js'></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.4.0/gsap.min.js"></script>
 
-<!--	<script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.7/dat.gui.min.js'></script>-->
-<!--	<script type="text/javascript" src='https://unpkg.com/three@0.125.2/examples/js/loaders/GLTFLoader.js'></script>-->
-
 <script id="vertex" type="x-shader/x-vertex">
-	//uniform mat4 projectionMatrix;
-	//uniform mat4 viewMatrix;
-	//uniform mat4 modelMatrix;
 	uniform vec2 uFrequency;
 	uniform float uTime;
 
-	//attribute vec3 position;
 	attribute float aRandom;
-	//attribute vec2 uv;
 
 	varying float vRandom;
 	varying vec2 vUv;
@@ -189,9 +97,6 @@
 	void main()
 	{
 		vec4 modelPosition = modelMatrix * vec4(position, 1.0);
-		//		    modelPosition.z += sin(modelPosition.x * uFrequency.x - uTime) * 0.1;
-		//		    modelPosition.z += sin(modelPosition.y * uFrequency.y - uTime) * 0.05;
-		//		    modelPosition.z += aRandom * 0.04;
 
 		float elevation = sin(modelPosition.x * uFrequency.x - uTime) * 0.02;
 		elevation += sin(modelPosition.y * uFrequency.y - uTime) * 0.02;
@@ -207,8 +112,6 @@
 	}
 </script>
 <script id="fragment" type="x-shader/x-fragment">
-	//	precision mediump float;
-
 	uniform vec3 uColor;
 	uniform sampler2D uTexture;
 
@@ -219,83 +122,90 @@
 	void main()
 	{
 		vec4 textureColor = texture2D(uTexture, vUv);
-		textureColor.rgb *= vElevation * 2.0 + 0.5;
+		textureColor.rgb *= vElevation * 2.0 + 0.6;
 		gl_FragColor = textureColor;
 	}
 </script>
+
 <script>
-    // import './style.css'
-    // import * as THREE from 'three'
-    // import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
-    // import * as dat from 'dat.gui'
-    // import testVertexShader from '../shaders/test/vertex.glsl'
-    // import testFragmentShader from '../shaders/test/fragment.glsl'
     let vertex = document.getElementById("vertex").textContent;
     let fragment = document.getElementById("fragment").textContent;
 
     /**
      * Base
      */
-// Debug
-// const gui = new dat.GUI()
 
-// Canvas
+        // Canvas
     const canvas = document.querySelector('canvas.webgl')
 
     // Scene
     const scene = new THREE.Scene()
-    // const whiteColor = new THREE.Color( 0xffffff );
-    // scene.background = whiteColor
 
     /**
      * Textures
      */
     const textureLoader = new THREE.TextureLoader()
-    // const flagTexture = textureLoader.load('/textures/flag-french.jpg')
-    // const flagTexture = textureLoader.load('/textures/1.jpg')
-    // const flagTexture = textureLoader.load('../static/textures/flag-french.jpg')
-    const flagTexture = textureLoader.load('../static/textures/senden.jpg')
+    const sendenTexture = textureLoader.load('../static/textures/senden.jpg')
+    const mojixTexture = textureLoader.load('../static/textures/mojix.jpg')
+    const ytemTexture = textureLoader.load('../static/textures/ytem.jpg')
 
     /**
      * Test mesh
      */
-// Geometry
+        // Geometry
     const geometry = new THREE.PlaneBufferGeometry(1, 1, 16, 16)
-    // const geometry = new THREE.BoxBufferGeometry(1,1,1)
-    // const geometry = new THREE.TorusGeometry(1,0.5,16,12)
 
     // Customize
     const count = geometry.attributes.position.count
     const randoms = new Float32Array(count)
     for (let i = 0; i < count; i++) {
         randoms[i] = Math.random()
-        // randoms[i] = Math.sin(i) / 2 + 0.5
     }
     geometry.setAttribute('aRandom', new THREE.BufferAttribute(randoms, 1))
 
     // Material
-    // const material = new THREE.RawShaderMaterial({
-    const material = new THREE.ShaderMaterial({
-        // vertexShader: testVertexShader,
+    const sendenMaterial = new THREE.ShaderMaterial({
         vertexShader: vertex,
-        // fragmentShader: testFragmentShader,
         fragmentShader: fragment,
-        // wireframe: true,
-        transparent: true,
         uniforms: {
             uFrequency: {value: new THREE.Vector2(10, 5)},
             uTime: {value: 0},
             uColor: {value: new THREE.Color('orange')},
-            uTexture: {value: flagTexture},
+            uTexture: {value: sendenTexture},
         },
     })
-    // gui.add(material.uniforms.uFrequency.value, 'x').min(50).max(100).step(1.0).name('frequencyX')
-    // gui.add(material.uniforms.uFrequency.value, 'y').min(50).max(100).step(1.0).name('frequencyY')
+    const mojixMaterial = new THREE.ShaderMaterial({
+        vertexShader: vertex,
+        fragmentShader: fragment,
+        uniforms: {
+            uFrequency: {value: new THREE.Vector2(10, 5)},
+            uTime: {value: 0},
+            uColor: {value: new THREE.Color('orange')},
+            uTexture: {value: mojixTexture},
+        },
+    })
+    const ytemMaterial = new THREE.ShaderMaterial({
+        vertexShader: vertex,
+        fragmentShader: fragment,
+        uniforms: {
+            uFrequency: {value: new THREE.Vector2(10, 5)},
+            uTime: {value: 0},
+            uColor: {value: new THREE.Color('orange')},
+            uTexture: {value: ytemTexture},
+        },
+    })
 
     // Mesh
-    const mesh = new THREE.Mesh(geometry, material)
-    // mesh.scale.y = 2 / 3
-    scene.add(mesh)
+    const sendenMesh = new THREE.Mesh(geometry, sendenMaterial)
+    scene.add(sendenMesh)
+    const mojixMesh = new THREE.Mesh(geometry, mojixMaterial)
+    mojixMesh.position.set(1, 0, -1)
+    mojixMesh.rotation.y = Math.PI * 0.5
+    scene.add(mojixMesh)
+    const ytemMesh = new THREE.Mesh(geometry, ytemMaterial)
+    ytemMesh.position.set(-1, 0, -1)
+    ytemMesh.rotation.y = Math.PI * -0.5
+    scene.add(ytemMesh)
 
     /**
      * Sizes
@@ -322,21 +232,14 @@
     /**
      * Camera
      */
-// Base camera
+        // Base camera
     const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
     camera.position.set(0, 0, 1)
     scene.add(camera)
 
     // Controls
     const controls = new THREE.OrbitControls(camera, canvas);
-    // const controls = new OrbitControls(camera, canvas)
-
     controls.enableDamping = true
-
-    // let aabb = new THREE.Box3().setFromObject( mesh );
-    // let center = aabb.getCenter( new THREE.Vector3() );
-    // let size = aabb.getSize( new THREE.Vector3() );
-
 
     /**
      * Renderer
@@ -355,8 +258,10 @@
     const tick = () => {
         const elapsedTime = clock.getElapsedTime()
 
-        // Update material
-        material.uniforms.uTime.value = elapsedTime
+        // Update Material
+        sendenMaterial.uniforms.uTime.value = elapsedTime
+        mojixMaterial.uniforms.uTime.value = elapsedTime
+        ytemMaterial.uniforms.uTime.value = elapsedTime
 
         // Update controls
         controls.update()
@@ -369,6 +274,72 @@
     }
 
     tick()
+
+    let center = [0, 0, 0]
+
+    // let aabb = new THREE.Box3().setFromObject( mesh );
+    // let center = aabb.getCenter( new THREE.Vector3() );
+    // let size = aabb.getSize( new THREE.Vector3() );
+    //
+    // gsap.to( camera.position, {
+    //     duration: 3,
+    //     x: center.x,
+    //     y: center.y,
+    //     z: center.z + size.z,
+    //     yoyo: true,
+    //     onUpdate: function() {
+    //         camera.lookAt( center );
+    //     }
+    // } );
+
+    let sendenBox = new THREE.Box3().setFromObject(sendenMesh);
+    let sendenMeshCenter = sendenBox.getCenter(new THREE.Vector3());
+    let mojixBox = new THREE.Box3().setFromObject(mojixMesh);
+    let mojixMeshCenter = mojixBox.getCenter(new THREE.Vector3());
+    let ytemBox = new THREE.Box3().setFromObject(ytemMesh);
+    let ytemMeshCenter = ytemBox.getCenter(new THREE.Vector3());
+
+    function goToSenden() {
+        gsap.to(camera.position, {
+            duration: 1,
+            x: sendenMeshCenter.x,
+            y: sendenMeshCenter.y,
+            z: sendenMeshCenter.z + 1,
+            // ease: "back.out(2.7)",
+
+            onUpdate: function () {
+                camera.lookAt(sendenMeshCenter);
+            }
+        });
+    }
+
+    function goToMojix() {
+        gsap.to(camera.position, {
+            duration: 1,
+            x: mojixMeshCenter.x + 1,
+            y: mojixMeshCenter.y,
+            z: mojixMeshCenter.z,
+            // ease: "back.out(2.7)",
+
+            onUpdate: function () {
+                camera.lookAt(mojixMeshCenter);
+            }
+        });
+    }
+
+    function goToYtem() {
+        gsap.to(camera.position, {
+            duration: 1,
+            x: ytemMeshCenter.x - 1,
+            y: ytemMeshCenter.y,
+            z: ytemMeshCenter.z,
+            // ease: "back.out(2.7)",
+
+            onUpdate: function () {
+                camera.lookAt(ytemMeshCenter);
+            }
+        });
+    }
 
 </script>
 
