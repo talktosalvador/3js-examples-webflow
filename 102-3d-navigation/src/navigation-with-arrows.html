@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>00 - Base code</title>
+
+	<!--	INSIDE <HEAD> TAG   -->
+	<style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .webgl {
+            /*display: block;*/
+        }
+
+        form {
+            position: absolute;
+            bottom: 5%;
+            left: 47%;
+            display: grid;
+            grid-template-columns: auto auto auto;
+            background-color: rgba(131, 131, 131, 0.5);
+            padding: 5px;
+            border-radius: 25px;
+        }
+
+        #buttonUp {
+            transform: rotate(90deg);
+        }
+
+        #buttonRight {
+            transform: rotate(180deg);
+        }
+
+        #buttonDown {
+            transform: rotate(-90deg);
+        }
+
+        #buttonLeft {
+            /*transform: rotate(90deg);*/
+        }
+
+        #buttonCenter {
+            background-color: #32aad2;
+            border-radius: 50%;
+        }
+
+        #buttonNextPage {
+            position: absolute;
+            right: 10%;
+            bottom: 10%;
+
+        }
+
+        a {
+            text-decoration: none;
+            font-family: "Monotype Corsiva";
+            font-size: 25px;
+            color: white;
+        }
+
+	</style>
+</head>
+
+<body>
+
+<form>
+	<div></div>
+
+	<div><a href="javascript:null">
+		<img id="buttonUp" src="../static/img/button-arrow-blue.png" width="25px" height="25px" alt=""
+		     onClick="moverCamaraArriba()"></a>
+	</div>
+
+	<div></div>
+
+	<div><a href="javascript:null">
+		<img id="buttonLeft" src="../static/img/button-arrow-blue.png" width="25px" height="25px" alt=""
+		     onClick="moverCamaraIzquierda()"></a>
+	</div>
+
+	<div><a href="javascript:null">
+		<img id="buttonCenter" src="../static/img/button-arrow-blue.png" width="25px" height="25px" alt=""
+		     onClick="moverCamaraCentro()"></a>
+	</div>
+
+	<div><a href="javascript:null">
+		<img id="buttonRight" src="../static/img/button-arrow-blue.png" width="25px" height="25px" alt=""
+		     onClick="moverCamaraDerecha()"></a>
+	</div>
+
+	<div></div>
+
+	<div><a href="javascript:null">
+		<img id="buttonDown" src="../static/img/button-arrow-blue.png" width="25px" height="25px" alt=""
+		     onClick="moverCamaraAbajo()"></a>
+	</div>
+</form>
+
+<div id="buttonNextPage">
+	<a href="index.html">Navigation with buttons</a>
+
+</div>
+
+<canvas id="canvas" class="webgl"></canvas>
+
+<script>
+    let center = [0, 0, 0]
+
+    function moverCamaraCentro() {
+        gsap.to(camera.position, {
+            duration: 1,
+            x: 0,
+            y: 0,
+            z: 1,
+            ease: "back.out(2.7)",
+
+            onUpdate: function () {
+                camera.lookAt(center);
+            }
+        });
+    }
+
+    function moverCamaraArriba() {
+        gsap.to(camera.position, {
+            duration: 1,
+            x: 0,
+            y: 1,
+            z: 1,
+            ease: "back.out(2.7)",
+
+            onUpdate: function () {
+                camera.lookAt(center);
+            }
+        });
+    }
+
+    function moverCamaraDerecha() {
+        gsap.to(camera.position, {
+            duration: 1,
+            x: 1,
+            y: 0,
+            z: 1,
+            ease: "back.out(2.7)",
+
+            onUpdate: function () {
+                camera.lookAt(center);
+            }
+        });
+    }
+
+    function moverCamaraIzquierda() {
+        gsap.to(camera.position, {
+            duration: 1,
+            x: -1,
+            y: 0,
+            z: 1,
+            ease: "back.out(2.7)",
+
+            onUpdate: function () {
+                camera.lookAt(center);
+            }
+        });
+    }
+
+    function moverCamaraAbajo() {
+        gsap.to(camera.position, {
+            duration: 1,
+            x: 0,
+            y: -1,
+            z: 1,
+            ease: "back.out(2.7)",
+
+            onUpdate: function () {
+                camera.lookAt(center);
+            }
+        });
+    }
+</script>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r125/three.min.js'></script>
+<script src='https://unpkg.com/three@0.125.2/examples/js/controls/OrbitControls.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.4.0/gsap.min.js"></script>
+
+<script id="vertex" type="x-shader/x-vertex">
+	uniform vec2 uFrequency;
+	uniform float uTime;
+
+	attribute float aRandom;
+
+	varying float vRandom;
+	varying vec2 vUv;
+	varying float vElevation;
+
+	void main()
+	{
+		vec4 modelPosition = modelMatrix * vec4(position, 1.0);
+
+		float elevation = sin(modelPosition.x * uFrequency.x - uTime) * 0.02;
+		elevation += sin(modelPosition.y * uFrequency.y - uTime) * 0.02;
+		modelPosition.z += elevation;
+
+		vec4 viewPosition = viewMatrix * modelPosition;
+		vec4 projectedPosition = projectionMatrix * viewPosition;
+		gl_Position = projectedPosition;
+		vRandom = aRandom;
+		vUv = uv;
+		vElevation = elevation;
+
+	}
+</script>
+<script id="fragment" type="x-shader/x-fragment">
+	uniform vec3 uColor;
+	uniform sampler2D uTexture;
+
+	varying float vRandom;
+	varying vec2 vUv;
+	varying float vElevation;
+
+	void main()
+	{
+		vec4 textureColor = texture2D(uTexture, vUv);
+		textureColor.rgb *= vElevation * 2.0 + 0.6;
+		gl_FragColor = textureColor;
+	}
+</script>
+<script>
+    let vertex = document.getElementById("vertex").textContent;
+    let fragment = document.getElementById("fragment").textContent;
+
+    /**
+     * Base
+     */
+
+// Canvas
+    const canvas = document.querySelector('canvas.webgl')
+
+    // Scene
+    const scene = new THREE.Scene()
+
+    /**
+     * Textures
+     */
+    const textureLoader = new THREE.TextureLoader()
+    const flagTexture = textureLoader.load('../static/textures/Canada-Flag-Leafs.jpg')
+
+    /**
+     * Test mesh
+     */
+// Geometry
+    const geometry = new THREE.PlaneBufferGeometry(2, 1, 64, 64)
+
+    // Customize
+    const count = geometry.attributes.position.count
+    const randoms = new Float32Array(count)
+    for (let i = 0; i < count; i++) {
+        randoms[i] = Math.random()
+    }
+    geometry.setAttribute('aRandom', new THREE.BufferAttribute(randoms, 1))
+
+    // Material
+    const material = new THREE.ShaderMaterial({
+        vertexShader: vertex,
+        fragmentShader: fragment,
+        uniforms: {
+            uFrequency: {value: new THREE.Vector2(5, 10)},
+            uTime: {value: 0},
+            uColor: {value: new THREE.Color('orange')},
+            uTexture: {value: flagTexture},
+        },
+    })
+
+    // Mesh
+    const mesh = new THREE.Mesh(geometry, material)
+    scene.add(mesh)
+
+    /**
+     * Sizes
+     */
+    const sizes = {
+        width: window.innerWidth,
+        height: window.innerHeight,
+    }
+
+    window.addEventListener('resize', () => {
+        // Update sizes
+        sizes.width = window.innerWidth
+        sizes.height = window.innerHeight
+
+        // Update camera
+        camera.aspect = sizes.width / sizes.height
+        camera.updateProjectionMatrix()
+
+        // Update renderer
+        renderer.setSize(sizes.width, sizes.height)
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    })
+
+    /**
+     * Camera
+     */
+	// Base camera
+    const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
+    camera.position.set(0.5, 0.5, 1)
+    scene.add(camera)
+
+    // Controls
+    const controls = new THREE.OrbitControls(camera, canvas);
+    controls.enableDamping = true
+
+    /**
+     * Renderer
+     */
+    const renderer = new THREE.WebGLRenderer({
+        canvas: canvas
+    })
+    renderer.setSize(sizes.width, sizes.height)
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+    /**
+     * Animate
+     */
+    const clock = new THREE.Clock()
+
+    const tick = () => {
+        const elapsedTime = clock.getElapsedTime()
+
+        // Update material
+        material.uniforms.uTime.value = elapsedTime
+
+        // Update controls
+        controls.update()
+
+        // Render
+        renderer.render(scene, camera)
+
+        // Call tick again on the next frame
+        window.requestAnimationFrame(tick)
+    }
+
+    tick()
+</script>
+
+</body>
+</html>
