@@ -4,11 +4,11 @@
 // // import * as dat from 'dat.gui'
 // let vertex = document.getElementById("vertex").textContent;
 // let fragment = document.getElementById("fragment").textContent;
-import testVertexShader from '../shaders/vertex.glsl'
-import testFragmentShader from '../shaders/fragment.glsl'
+// import testVertexShader from '../shaders/vertex.glsl'
+// import testFragmentShader from '../shaders/fragment.glsl'
 
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.118.3/build/three.module.js";
-import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.118.3/examples/jsm/controls/OrbitControls.js";
+// import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.118.3/build/three.module.js";
+// import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.118.3/examples/jsm/controls/OrbitControls.js";
 
 /**
  * Base
