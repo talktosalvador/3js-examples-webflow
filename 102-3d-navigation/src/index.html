@@ -28,20 +28,26 @@
             border-radius: 25px;
         }
 
-        #button1 {
+        #buttonUp {
             transform: rotate(90deg);
         }
 
-        #button2 {
+        #buttonRight {
             transform: rotate(180deg);
         }
 
-        #button3 {
+        #buttonDown {
             transform: rotate(-90deg);
         }
 
-        #button4 {
+        #buttonLeft {
             /*transform: rotate(90deg);*/
+        }
+
+        #buttonCenter {
+            background-color: #32aad2;
+            border-radius: 50%;
+	        /*width: 5px;*/
         }
 
 	</style>
@@ -53,28 +59,31 @@
 	<div></div>
 
 	<div><a href="javascript:null">
-		<img id="button1" src="../static/img/button-arrow-blue.png" width="25px" height="25px" alt=""
+		<img id="buttonUp" src="../static/img/button-arrow-blue.png" width="25px" height="25px" alt=""
 		     onClick="moverCamaraArriba()"></a>
 	</div>
 
 	<div></div>
 
 	<div><a href="javascript:null">
-		<img id="button4" src="../static/img/button-arrow-blue.png" width="25px" height="25px" alt=""
+		<img id="buttonLeft" src="../static/img/button-arrow-blue.png" width="25px" height="25px" alt=""
 		     onClick="moverCamaraIzquierda()"></a>
 	</div>
 
-	<div></div>
+	<div><a href="javascript:null">
+		<img id="buttonCenter" src="../static/img/button-arrow-blue.png" width="25px" height="25px" alt=""
+		     onClick="moverCamaraCentro()"></a>
+	</div>
 
 	<div><a href="javascript:null">
-		<img id="button2" src="../static/img/button-arrow-blue.png" width="25px" height="25px" alt=""
+		<img id="buttonRight" src="../static/img/button-arrow-blue.png" width="25px" height="25px" alt=""
 		     onClick="moverCamaraDerecha()"></a>
 	</div>
 
 	<div></div>
 
 	<div><a href="javascript:null">
-		<img id="button3" src="../static/img/button-arrow-blue.png" width="25px" height="25px" alt=""
+		<img id="buttonDown" src="../static/img/button-arrow-blue.png" width="25px" height="25px" alt=""
 		     onClick="moverCamaraAbajo()"></a>
 	</div>
 </form>
@@ -83,6 +92,20 @@
 
 <script>
     let center = [0, 0, 0]
+
+    function moverCamaraCentro() {
+        gsap.to(camera.position, {
+            duration: 1,
+            x: 0,
+            y: 0,
+            z: 1,
+            ease: "back.out(2.7)",
+
+            onUpdate: function () {
+                camera.lookAt(center);
+            }
+        });
+    }
 
     function moverCamaraArriba() {
         gsap.to(camera.position, {
@@ -184,7 +207,7 @@
 	}
 </script>
 <script id="fragment" type="x-shader/x-fragment">
-	//precision mediump float;
+	//	precision mediump float;
 
 	uniform vec3 uColor;
 	uniform sampler2D uTexture;
@@ -198,8 +221,6 @@
 		vec4 textureColor = texture2D(uTexture, vUv);
 		textureColor.rgb *= vElevation * 2.0 + 0.5;
 		gl_FragColor = textureColor;
-
-		//		    gl_FragColor = vec4(uColor, 0.8);
 	}
 </script>
 <script>
@@ -233,13 +254,13 @@
     // const flagTexture = textureLoader.load('/textures/flag-french.jpg')
     // const flagTexture = textureLoader.load('/textures/1.jpg')
     // const flagTexture = textureLoader.load('../static/textures/flag-french.jpg')
-    const flagTexture = textureLoader.load('../static/textures/Canada-Flag-Leafs-1.jpg')
+    const flagTexture = textureLoader.load('../static/textures/senden.jpg')
 
     /**
      * Test mesh
      */
 // Geometry
-    const geometry = new THREE.PlaneBufferGeometry(2, 1, 64, 64)
+    const geometry = new THREE.PlaneBufferGeometry(1, 1, 16, 16)
     // const geometry = new THREE.BoxBufferGeometry(1,1,1)
     // const geometry = new THREE.TorusGeometry(1,0.5,16,12)
 
@@ -260,9 +281,9 @@
         // fragmentShader: testFragmentShader,
         fragmentShader: fragment,
         // wireframe: true,
-        // transparent: true,
+        transparent: true,
         uniforms: {
-            uFrequency: {value: new THREE.Vector2(10, 15)},
+            uFrequency: {value: new THREE.Vector2(10, 5)},
             uTime: {value: 0},
             uColor: {value: new THREE.Color('orange')},
             uTexture: {value: flagTexture},
