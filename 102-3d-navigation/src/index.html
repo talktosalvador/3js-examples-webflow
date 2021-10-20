@@ -14,14 +14,34 @@
         }
 
         .webgl {
-            /*z-index: -5;*/
-            display: block;
+            /*display: block;*/
         }
 
         form {
             position: absolute;
-            top: 50%;
-            left: 50%;
+            bottom: 5%;
+            left: 45%;
+            display: grid;
+            grid-template-columns: auto auto auto;
+            background-color: rgba(131, 131, 131, 0.5);
+            padding: 5px;
+            border-radius: 25px;
+        }
+
+        #button1 {
+            transform: rotate(90deg);
+        }
+
+        #button2 {
+            transform: rotate(180deg);
+        }
+
+        #button3 {
+            transform: rotate(-90deg);
+        }
+
+        #button4 {
+            /*transform: rotate(90deg);*/
         }
 
 	</style>
@@ -30,70 +50,94 @@
 <body>
 
 <form>
-<input type="button"
-       onclick="moverCamaraArriba()"
-       value="Arriba">
-<input type="button"
-       onclick="moverCamaraDerecha()"
-       value="Derecha">
-<input type="button"
-       onclick="moverCamaraAbajo()"
-       value="Abajo">
-<input type="button"
-       onclick="moverCamaraIzquierda()"
-       value="Izquierda">
+	<div></div>
+
+	<div><a href="javascript:null">
+		<img id="button1" src="../static/img/button-arrow-blue.png" width="25px" height="25px" alt=""
+		     onClick="moverCamaraArriba()"></a>
+	</div>
+
+	<div></div>
+
+	<div><a href="javascript:null">
+		<img id="button4" src="../static/img/button-arrow-blue.png" width="25px" height="25px" alt=""
+		     onClick="moverCamaraIzquierda()"></a>
+	</div>
+
+	<div></div>
+
+	<div><a href="javascript:null">
+		<img id="button2" src="../static/img/button-arrow-blue.png" width="25px" height="25px" alt=""
+		     onClick="moverCamaraDerecha()"></a>
+	</div>
+
+	<div></div>
+
+	<div><a href="javascript:null">
+		<img id="button3" src="../static/img/button-arrow-blue.png" width="25px" height="25px" alt=""
+		     onClick="moverCamaraAbajo()"></a>
+	</div>
 </form>
 
 <canvas id="canvas" class="webgl"></canvas>
 
 <script>
+    let center = [0, 0, 0]
+
     function moverCamaraArriba() {
-        gsap.to( camera.position, {
+        gsap.to(camera.position, {
             duration: 1,
             x: 0,
             y: 1,
             z: 1,
+            ease: "back.out(2.7)",
 
-            onUpdate: function() {
-                camera.lookAt( center );
+            onUpdate: function () {
+                camera.lookAt(center);
             }
-        } );
+        });
     }
+
     function moverCamaraDerecha() {
-        gsap.to( camera.position, {
+        gsap.to(camera.position, {
             duration: 1,
             x: 1,
             y: 0,
             z: 1,
+            ease: "back.out(2.7)",
 
-            onUpdate: function() {
-                camera.lookAt( center );
+            onUpdate: function () {
+                camera.lookAt(center);
             }
-        } );
+        });
     }
+
     function moverCamaraIzquierda() {
-        gsap.to( camera.position, {
+        gsap.to(camera.position, {
             duration: 1,
             x: -1,
             y: 0,
             z: 1,
+            ease: "back.out(2.7)",
 
-            onUpdate: function() {
-                camera.lookAt( center );
+            onUpdate: function () {
+                camera.lookAt(center);
             }
-        } );
+        });
     }
+
     function moverCamaraAbajo() {
-        gsap.to( camera.position, {
+        gsap.to(camera.position, {
             duration: 1,
             x: 0,
             y: -1,
             z: 1,
+            ease: "back.out(2.7)",
 
-            onUpdate: function() {
-                camera.lookAt( center );
+            onUpdate: function () {
+                camera.lookAt(center);
             }
-        } );
+        });
     }
 </script>
 
@@ -122,9 +166,9 @@
 	void main()
 	{
 		vec4 modelPosition = modelMatrix * vec4(position, 1.0);
-//		    modelPosition.z += sin(modelPosition.x * uFrequency.x - uTime) * 0.1;
-//		    modelPosition.z += sin(modelPosition.y * uFrequency.y - uTime) * 0.05;
-//		    modelPosition.z += aRandom * 0.04;
+		//		    modelPosition.z += sin(modelPosition.x * uFrequency.x - uTime) * 0.1;
+		//		    modelPosition.z += sin(modelPosition.y * uFrequency.y - uTime) * 0.05;
+		//		    modelPosition.z += aRandom * 0.04;
 
 		float elevation = sin(modelPosition.x * uFrequency.x - uTime) * 0.02;
 		elevation += sin(modelPosition.y * uFrequency.y - uTime) * 0.02;
@@ -155,7 +199,7 @@
 		textureColor.rgb *= vElevation * 2.0 + 0.5;
 		gl_FragColor = textureColor;
 
-//		    gl_FragColor = vec4(uColor, 0.8);
+		//		    gl_FragColor = vec4(uColor, 0.8);
 	}
 </script>
 <script>
@@ -179,6 +223,8 @@
 
     // Scene
     const scene = new THREE.Scene()
+    // const whiteColor = new THREE.Color( 0xffffff );
+    // scene.background = whiteColor
 
     /**
      * Textures
@@ -187,7 +233,7 @@
     // const flagTexture = textureLoader.load('/textures/flag-french.jpg')
     // const flagTexture = textureLoader.load('/textures/1.jpg')
     // const flagTexture = textureLoader.load('../static/textures/flag-french.jpg')
-    const flagTexture = textureLoader.load('../static/textures/flag-nazi.jpg')
+    const flagTexture = textureLoader.load('../static/textures/Canada-Flag-Leafs-1.jpg')
 
     /**
      * Test mesh
@@ -269,7 +315,6 @@
     // let aabb = new THREE.Box3().setFromObject( mesh );
     // let center = aabb.getCenter( new THREE.Vector3() );
     // let size = aabb.getSize( new THREE.Vector3() );
-
 
 
     /**
