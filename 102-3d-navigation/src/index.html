@@ -40,6 +40,20 @@
             color: white;
         }
 
+        .dark-mode {
+	        position: absolute;
+	        right: 5%;
+	        top: 5%;
+	        background-color: dimgray;
+        }
+
+        .light-mode {
+	        position: absolute;
+	        right: 5%;
+	        top: 5%;
+	        background-color: white;
+        }
+
 	</style>
 </head>
 
@@ -55,7 +69,18 @@
 	<a href="navigation-with-arrows.html">Navigation with arrows</a>
 
 </div>
-
+<div class="dark-mode">
+	<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+	<script>
+        function darkMode() {
+            let element = document.getElementsByClassName("dark-mode");
+            element.classList.toggle("light-mode");
+        }
+	</script>
+	<a href="javascript:null" onclick="darkMode()">
+		<lottie-player src="https://assets5.lottiefiles.com/packages/lf20_l6AlRK.json" mode="bounce" background="transparent"  speed="1"  style="width: 30px; height: 30px;" hover loop  ></lottie-player>
+	</a>
+</div>
 <canvas id="canvas" class="webgl"></canvas>
 
 

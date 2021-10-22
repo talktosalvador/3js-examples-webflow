@@ -405,7 +405,7 @@ var bloomFramebuffers = [];
 var sunrays;
 var sunraysTemp;
 
-var ditheringTexture = createTextureAsync('LDR_LLL1_0.png');
+var ditheringTexture = createTextureAsync('https://www.transparenttextures.com/patterns/stressed-linen.png');
 
 var blurProgram            = new Program(blurVertexShader, blurShader);
 var copyProgram            = new Program(baseVertexShader, copyShader);
